@@ -606,7 +606,7 @@ int ansr_write(ansr_t *ansr, char *input, size_t input_len)
 
 			case 0x70 ... 0x7e:	/* "private" final bytes */
 				/* TODO: maybe never? or drop on floor (log something?) */
-				assert(0);
+				_ansr->state = ANSR_STATE_INPUT;
 				break;
 			}
 
