@@ -339,8 +339,6 @@ ESC[48;5;⟨n⟩m Select background color
 			break;
 		}
 	}
-
-	_ansr->n_params = 0;
 }
 
 
@@ -470,6 +468,7 @@ int ansr_write(ansr_t *ansr, char *input, size_t input_len)
 			case 0x5b: /* '[' */
 				_ansr->state = ANSR_STATE_CSI;
 				_ansr->accumulator = 0;
+				_ansr->n_params = 0;
 				break;
 
 			default:
@@ -522,20 +521,17 @@ int ansr_write(ansr_t *ansr, char *input, size_t input_len)
 					n = _ansr->params[0];
 
 				_ansr->cursor_y -= MIN(_ansr->cursor_y, n);
-				_ansr->n_params = 0;
 				_ansr->state = ANSR_STATE_INPUT;
 				break;
 			}
 
 			case 0x42:		/* cursor down N bytes (default 1) */
 				_ansr->cursor_y += _ansr->n_params ? _ansr->params[0] : 1;
-				_ansr->n_params = 0;
 				_ansr->state = ANSR_STATE_INPUT;
 				break;
 
 			case 0x43:		/* cursor forward N bytes (default 1) */
 				_ansr->cursor_x += _ansr->n_params ? _ansr->params[0] : 1;
-				_ansr->n_params = 0;
 				_ansr->state = ANSR_STATE_INPUT;
 				break;
 
@@ -556,7 +552,6 @@ int ansr_write(ansr_t *ansr, char *input, size_t input_len)
 
 			case 0x47:		/* cursor horiz absolute/column N (default 1) */
 				_ansr->cursor_x = _ansr->n_params ? (_ansr->params[0] - 1) : 0;
-				_ansr->n_params = 0;
 				_ansr->state = ANSR_STATE_INPUT;
 				break;
 
@@ -570,7 +565,6 @@ int ansr_write(ansr_t *ansr, char *input, size_t input_len)
 
 				_ansr->cursor_y = r;
 				_ansr->cursor_x = c;
-				_ansr->n_params = 0;
 				_ansr->state = ANSR_STATE_INPUT;
 				break;
 			}
