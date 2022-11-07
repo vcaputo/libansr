@@ -52,7 +52,6 @@ typedef struct _ansr_t {
 	size_t			n_params_allocated, n_params;
 	unsigned		accumulator;
 	char			*params;
-	ansr_conf_t		conf;
 } _ansr_t;
 
 
@@ -78,7 +77,7 @@ ansr_t * ansr_new(ansr_conf_t *conf, char *input, size_t input_len)
 	if (!_ansr)
 		return NULL;
 
-	_ansr->conf = *conf;
+	_ansr->public.conf = *conf;
 
 	if (input && ansr_write(&_ansr->public, input, input_len) < 0)
 		return ansr_free(&_ansr->public);
@@ -355,7 +354,7 @@ ESC[48;5;⟨n⟩m Select background color
 /* returns -errno on failure (ENOMEM) */
 static inline int _ansr_add_char(_ansr_t *_ansr, char c)
 {
-	if (_ansr->conf.screen_width && _ansr->cursor_x == _ansr->conf.screen_width) {
+	if (_ansr->public.conf.screen_width && _ansr->cursor_x == _ansr->public.conf.screen_width) {
 		_ansr->cursor_x = 0;
 		_ansr->cursor_y++;
 	}

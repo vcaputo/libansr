@@ -72,6 +72,7 @@ typedef struct ansr_row_t {
 } ansr_row_t;
 
 typedef struct ansr_t {
+	ansr_conf_t		conf;
 	unsigned		height, allocated_height;
 	ansr_row_t		**rows;
 } ansr_t;
