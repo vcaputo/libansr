@@ -56,6 +56,12 @@ typedef struct _ansr_t {
 } _ansr_t;
 
 
+static ansr_conf_t ansr_conf_defaults = {
+	.screen_width = 80,
+	.screen_lines = 24,
+};
+
+
 /* create a new ansi renderer of width,height dimensions, starts completely cleared.
  * if input is non-NULL it will be applied to the newly created ans.
  */
@@ -65,12 +71,14 @@ ansr_t * ansr_new(ansr_conf_t *conf, char *input, size_t input_len)
 
 	assert(!input || input_len > 0);
 
+	if (!conf)
+		conf = &ansr_conf_defaults;
+
 	_ansr = calloc(1, sizeof(*_ansr));
 	if (!_ansr)
 		return NULL;
 
-	if (conf)
-		_ansr->conf = *conf;
+	_ansr->conf = *conf;
 
 	if (input && ansr_write(&_ansr->public, input, input_len) < 0)
 		return ansr_free(&_ansr->public);
@@ -347,7 +355,7 @@ ESC[48;5;⟨n⟩m Select background color
 /* returns -errno on failure (ENOMEM) */
 static inline int _ansr_add_char(_ansr_t *_ansr, char c)
 {
-	if (_ansr->conf.wrap80 && _ansr->cursor_x == 80) {
+	if (_ansr->conf.screen_width && _ansr->cursor_x == _ansr->conf.screen_width) {
 		_ansr->cursor_x = 0;
 		_ansr->cursor_y++;
 	}
@@ -456,9 +464,8 @@ int ansr_write(ansr_t *ansr, char *input, size_t input_len)
 			break;
 
 		case ANSR_STATE_EOF:
-			/* just discard everything after here */
-			/* TODO: maybe support metadata like SAUCE?
-			 * https://www.acid.org/info/sauce/sauce.htm
+			/* just discard everything after EOF.
+			 * SAUCE parsing is deliberately not handled by libansr.
 			 */
 			break;
 
