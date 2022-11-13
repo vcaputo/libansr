@@ -14,7 +14,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _ASNR_H
+#ifndef _ANSR_H
 #define _ANSR_H
 
 typedef struct ansr_conf_t {
