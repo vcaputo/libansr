@@ -18,7 +18,7 @@
 #define _ANSR_H
 
 typedef struct ansr_conf_t {
-	unsigned	screen_width, screen_lines;	/* explicit overrides, 0 for SAUCE or hard-coded (80x24) */
+	unsigned	screen_width, screen_lines;	/* explicit overrides, 0 for defaults (80x24) */
 } ansr_conf_t;
 
 typedef enum ansr_color_t {
